@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISTEM ABSENSI INSTANSI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --primary-emerald: #00ff88;
+            --dark-base: #020c0c;
+            --glass-white: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--dark-base);
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .hero-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(2, 12, 12, 0.85), rgba(2, 12, 12, 0.95)), url('bg.png');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+        }
+
+        .glass {
+            background: var(--glass-white);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .accent-green { color: var(--primary-emerald); text-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
+        .bg-accent { background: linear-gradient(135deg, #00ff88, #008145); color: #020c0c; }
+        
+        .section-view { display: none; animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .logo-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+        .logo-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-emerald);
+            background: rgba(0, 255, 136, 0.05);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
+        }
+
+        input, select {
+            background: rgba(0, 0, 0, 0.6) !important;
+            border: 1px solid var(--glass-border) !important;
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+        input:focus { border-color: var(--primary-emerald) !important; outline: none; box-shadow: 0 0 10px rgba(0, 255, 136, 0.2); }
+
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .on-duty { background: var(--primary-emerald); box-shadow: 0 0 12px var(--primary-emerald); }
+        .off-duty { background: #6b7280; }
+
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary-emerald); transition: 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+        
+        /* Loading Overlay */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--dark-base);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="pb-10">
+    <div id="loading-screen">
+        <div class="w-12 h-12 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin mb-4"></div>
+        <p class="text-[10px] font-black tracking-[0.5em] accent-green">SABAR LEKK JAN APAKALI...</p>
+    </div>
+
+    <div class="hero-bg"></div>
+
+    <nav class="fixed top-0 w-full z-50 glass px-12 py-5 flex justify-between items-center border-b border-white/10">
+        <div class="flex items-center gap-4">
+            <img src="logosdp.png" alt="Logo Utama" class="w-12 h-12 rounded-xl shadow-lg border border-white/20">
+            <div class="flex flex-col">
+                <span class="font-black tracking-tighter text-2xl italic leading-none">SUNDAPRIDE</span>
+                <span class="accent-green text-[10px] font-bold tracking-[0.4em]">PRESENT SYSTEM</span>
+            </div>
+        </div>
+        <div class="flex gap-8 items-center">
+            <button onclick="showSection('landing')" class="nav-link text-xs font-bold tracking-widest">HOME</button>
+            <button onclick="startPortal('staff')" class="nav-link text-xs font-bold tracking-widest">STAFF</button>
+            <button onclick="startPortal('admin')" class="bg-red-500/10 text-red-500 px-5 py-2 rounded-full text-xs font-black border border-red-500/20 hover:bg-red-500 hover:text-white transition">ADMIN PANEL</button>
+        </div>
+    </nav>
+
+    <section id="landing" class="section-view active pt-40 px-6 max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-16 items-center mb-20">
+            <div>
+                <div class="inline-block px-4 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-bold tracking-widest mb-6">SELAMAT DATANG DI SISTEM ABSENSI.</div>
+                <h1 class="text-7xl font-black mb-8 italic leading-[0.9] tracking-tighter">
+                    DISIPLIN DAN<br><span class="accent-green underline decoration-white/10">INTEGRITAS.</span>
+                </h1>
+                <p class="text-gray-400 mb-10 max-w-md leading-relaxed">Sistem manajemen terpadu untuk efisiensi operasional instansi pemerintah, medis, dan pelayanan publik KOTA SundaPride.</p>
+                
+                <div class="flex gap-10 mb-12">
+                    <div class="text-center group">
+                        <div class="p-4 glass rounded-2xl mb-3 group-hover:scale-110 transition cursor-help">
+                            <img src="logopemerintah.png" class="w-12 h-12 object-contain">
+                        </div>
+                        <p class="text-[9px] font-black opacity-40 group-hover:opacity-100 transition">GOV</p>
+                    </div>
+                    <div class="text-center group">
+                        <div class="p-4 glass rounded-2xl mb-3 group-hover:scale-110 transition cursor-help">
+                            <img src="logors.png" class="w-12 h-12 object-contain">
+                        </div>
+                        <p class="text-[9px] font-black opacity-40 group-hover:opacity-100 transition">MEDICAL</p>
+                    </div>
+                    <div class="text-center group">
+                        <div class="p-4 glass rounded-2xl mb-3 group-hover:scale-110 transition cursor-help">
+                            <img src="logorm2.png" class="w-12 h-12 object-contain">
+                        </div>
+                        <p class="text-[9px] font-black opacity-40 group-hover:opacity-100 transition">FOOD</p>
+                    </div>
+                </div>
+
+                <button onclick="startPortal('staff')" class="bg-accent px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl shadow-emerald-500/20 hover:shadow-emerald-500/40 transition transform hover:-translate-y-1">Mulai Bertugas Sekarang</button>
+            </div>
+
+            <div class="glass p-12 rounded-[50px] border-t-4 border-t-accent relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-5">
+                    <i class="fas fa-shield-alt text-9xl"></i>
+                </div>
+                <h3 class="text-2xl font-black mb-8 accent-green italic tracking-tighter">PROTOKOL OPERASIONAL</h3>
+                <div class="space-y-6 text-sm">
+                    <div class="flex gap-6 group">
+                        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center font-bold text-accent border border-accent/20 group-hover:bg-accent group-hover:text-black transition">01</div>
+                        <p class="text-gray-300 self-center font-medium">Lakukan <b class="text-white">Clock-In</b> saat mulai bertugas di area kerja.</p>
+                    </div>
+                    <div class="flex gap-6 group">
+                        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center font-bold text-accent border border-accent/20 group-hover:bg-accent group-hover:text-black transition">02</div>
+                        <p class="text-gray-300 self-center font-medium">Maksimal durasi satu sesi tugas adalah <b class="text-white">14 Jam</b>.</p>
+                    </div>
+                    <div class="flex gap-6 group">
+                        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center font-bold text-accent border border-accent/20 group-hover:bg-accent group-hover:text-black transition">03</div>
+                        <p class="text-gray-300 self-center font-medium">Data gaji dikalkulasi secara <b class="text-white">Real-time</b> per menit tugas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="agency-select" class="section-view pt-44 px-6 text-center">
+        <h2 id="portal-title" class="text-4xl font-black mb-4 italic tracking-tighter">PILIHAN<span class="accent-green">INSTANSI</span></h2>
+        <p class="text-gray-500 text-xs mb-16 font-bold tracking-[0.5em]">SILAHKAN PILIH INSTANSI KERJA ANDA</p>
+        
+        <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
+            <div onclick="openAuth('Pemerintah')" class="glass logo-card p-12 rounded-[45px] cursor-pointer">
+                <img src="logopemerintah.png" class="w-24 h-24 mx-auto mb-8 drop-shadow-2xl">
+                <h4 class="font-black text-lg uppercase tracking-widest">Pemerintah</h4>
+                <div class="mt-4 text-[10px] opacity-40 font-bold uppercase">SundaPride Gov</div>
+            </div>
+            <div onclick="openAuth('Rumah Sakit')" class="glass logo-card p-12 rounded-[45px] cursor-pointer">
+                <img src="logors.png" class="w-24 h-24 mx-auto mb-8 drop-shadow-2xl">
+                <h4 class="font-black text-lg uppercase tracking-widest">Rumah Sakit</h4>
+                <div class="mt-4 text-[10px] opacity-40 font-bold uppercase">SundaPride Medical</div>
+            </div>
+            <div onclick="openAuth('Rumah Makan')" class="glass logo-card p-12 rounded-[45px] cursor-pointer">
+                <img src="logorm2.png" class="w-24 h-24 mx-auto mb-8 drop-shadow-2xl">
+                <h4 class="font-black text-lg uppercase tracking-widest">Rumah Makan</h4>
+                <div class="mt-4 text-[10px] opacity-40 font-bold uppercase">SundaPride Resto</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="staff-dashboard" class="section-view pt-36 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex justify-between items-center mb-10">
+                <div>
+                    <h2 class="text-4xl font-black italic uppercase leading-none"><span id="staff-agency-name" class="accent-green">---</span></h2>
+                    <p class="text-[10px] font-bold opacity-30 tracking-[0.5em] mt-2 italic">STAFF OPERATIONAL PORTAL</p>
+                </div>
+                <button onclick="showSection('agency-select')" class="bg-white/5 hover:bg-white/10 px-6 py-3 rounded-xl text-[10px] font-black border border-white/5 transition uppercase italic">Ganti Unit</button>
+            </div>
+            
+            <div class="grid lg:grid-cols-3 gap-10">
+                <div class="lg:col-span-2 glass rounded-[40px] overflow-hidden">
+                    <div class="p-6 bg-white/5 flex justify-between items-center border-b border-white/5">
+                        <span class="text-[10px] font-black tracking-widest opacity-50 uppercase italic">Pegawai Terdaftar</span>
+                        <div class="flex gap-2">
+                            <span class="status-dot on-duty"></span> <span class="text-[9px] font-bold opacity-50 mr-3">ON DUTY</span>
+                            <span class="status-dot off-duty"></span> <span class="text-[9px] font-bold opacity-50">OFF DUTY</span>
+                        </div>
+                    </div>
+                    <div id="staff-live-list" class="divide-y divide-white/5 max-h-[500px] overflow-y-auto"></div>
+                </div>
+
+                <div id="staff-action-box" class="glass p-10 rounded-[40px] hidden border-t-8 border-t-accent shadow-2xl">
+                    <div class="text-center mb-8">
+                        <i class="fas fa-fingerprint text-4xl accent-green mb-4"></i>
+                        <h4 id="selected-staff-name" class="text-2xl font-black uppercase tracking-tighter">NAMA STAFF</h4>
+                        <p id="selected-staff-role" class="text-[10px] text-accent font-bold uppercase tracking-widest mt-2">JABATAN</p>
+                    </div>
+                    <input type="password" id="staff-pin-input" placeholder="PERSONAL PIN" class="w-full p-5 rounded-2xl text-center text-3xl tracking-[0.5em] mb-8 font-black">
+                    <div class="flex flex-col gap-4">
+                        <button onclick="processDuty('in')" class="w-full bg-accent py-5 rounded-2xl font-black text-xs uppercase shadow-lg shadow-emerald-500/20">CLOCK IN (MASUK)</button>
+                        <button onclick="processDuty('out')" class="w-full bg-red-500/10 text-red-500 py-5 rounded-2xl font-black text-xs uppercase border border-red-500/20 hover:bg-red-500 hover:text-white transition">CLOCK OUT (SELESAI)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="admin-dashboard" class="section-view pt-36 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 id="admin-agency-title" class="text-5xl font-black italic uppercase tracking-tighter leading-none italic">ADMIN <span class="accent-green">PANEL</span></h2>
+                    <p class="text-[10px] font-bold tracking-[0.5em] text-gray-500 mt-4">PENGELUARAN TOTAL: <span id="total-agency-payout" class="text-white">Rp 0</span></p>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="exportToWord()" class="bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase border border-blue-500/20 transition"><i class="fas fa-file-invoice mr-2"></i>Cetak Laporan</button>
+                    <button onclick="resetAllDuty()" class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase border border-red-500/20 transition">Reset Database</button>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-4 gap-8">
+                <div class="lg:col-span-3 glass rounded-[40px] overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="text-[10px] text-gray-500 uppercase font-black bg-white/5 tracking-widest italic">
+                                <tr>
+                                    <th class="p-8">Profil Pegawai</th>
+                                    <th class="p-8">PIN</th>
+                                    <th class="p-8">Akumulasi Waktu</th>
+                                    <th class="p-8">Total Gaji</th>
+                                    <th class="p-8 text-right">Opsi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-table-body" class="text-sm divide-y divide-white/5"></tbody>
+                        </table>
+                    </div>
+                    <button onclick="openAddStaff()" class="w-full p-8 text-xs font-black uppercase opacity-40 hover:opacity-100 hover:bg-accent hover:text-black transition tracking-[8px] bg-white/5">+ DAFTARKAN PEGAWAI BARU</button>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="glass p-8 rounded-[40px]">
+                        <h4 class="text-xs font-black uppercase tracking-widest mb-8 opacity-50 flex items-center italic"><i class="fas fa-coins mr-3 text-accent"></i>Rate Gaji / Menit</h4>
+                        <div id="admin-salary-table" class="space-y-4"></div>
+                    </div>
+
+                    <div class="glass p-8 rounded-[40px] border-l-4 border-l-red-500">
+                        <h4 class="text-xs font-black uppercase tracking-widest mb-6 opacity-50 italic"><i class="fas fa-key mr-3 text-red-500"></i>Keamanan Instansi</h4>
+                        <label class="text-[9px] font-bold opacity-30 mb-2 block">PASSWORD AKSES STAFF</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="agency-pass-input" class="w-full p-3 rounded-xl text-sm font-black">
+                            <button onclick="updateAgencyPass()" class="bg-accent px-4 rounded-xl text-black text-xs font-black transition active:scale-95"><i class="fas fa-save"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="auth-modal" class="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center hidden p-6 backdrop-blur-2xl">
+        <div class="glass max-w-sm w-full p-12 rounded-[50px] text-center border-t-8 border-t-accent">
+            <div id="auth-logo-container" class="mb-6"></div>
+            <h3 id="auth-title" class="text-3xl font-black uppercase italic mb-2 tracking-tighter">LOGIN</h3>
+            <p class="text-[10px] font-bold opacity-30 tracking-[0.4em] mb-10">INSTANSI TERVERIFIKASI</p>
+            <input type="password" id="auth-input" placeholder="ACCESS CODE" class="w-full p-5 rounded-2xl text-center text-2xl tracking-[0.5em] mb-8 font-black">
+            <div class="flex gap-4">
+                <button onclick="closeAuth()" class="flex-1 bg-white/5 py-5 rounded-2xl font-black text-[10px] uppercase border border-white/5">BATAL</button>
+                <button onclick="submitAuth()" class="flex-1 bg-accent py-5 rounded-2xl font-black text-[10px] uppercase shadow-lg shadow-emerald-500/30">VERIFIKASI</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-staff-modal" class="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center hidden p-6 backdrop-blur-2xl">
+        <div class="glass max-w-md w-full p-12 rounded-[50px] border-t-8 border-t-accent">
+            <h3 class="text-3xl font-black uppercase italic mb-10 tracking-tighter">DATA <span class="accent-green">PEGAWAI</span></h3>
+            <div class="space-y-5">
+                <div>
+                    <label class="text-[10px] font-black opacity-30 ml-2 mb-2 block uppercase">Nama Lengkap</label>
+                    <input type="text" id="new-staff-name" class="w-full p-4 rounded-2xl font-bold">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black opacity-30 ml-2 mb-2 block uppercase">Jabatan Instansi</label>
+                    <select id="new-staff-role" class="w-full p-4 rounded-2xl font-bold"></select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black opacity-30 ml-2 mb-2 block uppercase">PIN</label>
+                    <input type="text" id="new-staff-pin" maxlength="4" class="w-full p-4 rounded-2xl font-black text-center text-xl tracking-widest">
+                </div>
+                <div class="flex gap-4 pt-6">
+                    <button onclick="closeAddStaff()" class="flex-1 bg-white/5 py-5 rounded-2xl font-black text-[10px] uppercase border border-white/5">BATAL</button>
+                    <button onclick="saveStaff()" class="flex-1 bg-accent py-5 rounded-2xl font-black text-[10px] uppercase italic">SIMPAN DATA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDS0COE1X5vh8QCeIeaA-rmmGf8uKrP0M8",
+            authDomain: "absensi-instansi-sdp.firebaseapp.com",
+            projectId: "absensi-instansi-sdp",
+            storageBucket: "absensi-instansi-sdp.firebasestorage.app",
+            messagingSenderId: "1089676129718",
+            appId: "1:1089676129718:web:dfefd5b82b2c557010bd17",
+            databaseURL: "https://absensi-instansi-sdp-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db_firebase = getDatabase(app);
+
+        // Global State
+        window.currentMode = 'staff';
+        window.currentAgency = '';
+        window.selectedStaffIndex = null;
+        window.db = {};
+
+        const DEFAULT_ROLES = {
+            "Pemerintah": { logo: 'logopemerintah.png', roles: ["PRESIDEN", "WALIKOTA", "Wakil Walikota", "Sekretaris Negara", "Menteri Keuangan", "Staff", "HAKIM", "JAKSA", "DPR"], salary: 5000, pass: 'GOV123' },
+            "Rumah Makan": { logo: 'logorm2.png', roles: ["MANAGER", "WAKIL MANAGER", "SUPERVISOR", "KEPALA CHEF", "WAKIL CHEF", "PELAYAN"], salary: 2000, pass: 'RM123' },
+            "Rumah Sakit": { logo: 'logors.png', roles: ["DIREKTUR UTAMA", "WAKIL DIREKTUR", "CHIEF DOKTER", "DOKTER AHLI", "DOKTER", "PARAMEDIC", "MAGANG"], salary: 4000, pass: 'RS123' }
+        };
+
+        // Sinkronisasi Real-time
+        const dbRef = ref(db_firebase, 'nexus_v2');
+        onValue(dbRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                window.db = data;
+            } else {
+                // Inisialisasi awal jika cloud kosong
+                window.db = {
+                    Pemerintah: { staff: [], salaries: {}, pass: 'GOV123' },
+                    "Rumah Sakit": { staff: [], salaries: {}, pass: 'RS123' },
+                    "Rumah Makan": { staff: [], salaries: {}, pass: 'RM123' }
+                };
+                Object.keys(DEFAULT_ROLES).forEach(ag => {
+                    DEFAULT_ROLES[ag].roles.forEach(role => {
+                        window.db[ag].salaries[role] = DEFAULT_ROLES[ag].salary;
+                    });
+                });
+                set(dbRef, window.db);
+            }
+            
+            // Re-render jika sedang di dashboard tertentu
+            if(window.currentAgency) {
+                if(window.currentMode === 'staff' && document.getElementById('staff-dashboard').classList.contains('active')) renderStaffDashboard();
+                if(window.currentMode === 'admin' && document.getElementById('admin-dashboard').classList.contains('active')) renderAdminDashboard();
+            }
+            document.getElementById('loading-screen').style.display = 'none';
+        });
+
+        // --- Core Functions attached to window for HTML access ---
+        window.saveCloud = () => set(ref(db_firebase, 'nexus_v2'), window.db);
+
+        window.showSection = (id) => {
+            document.querySelectorAll('.section-view').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.startPortal = (mode) => {
+            window.currentMode = mode;
+            const title = document.getElementById('portal-title');
+            title.innerHTML = mode === 'staff' ? `PILIHAN <span class="accent-green">INSTANSI</span>` : `ADMIN <span class="text-red-500">CONTROL</span>`;
+            window.showSection('agency-select');
+        };
+
+        window.openAuth = (agency) => {
+            window.currentAgency = agency;
+            document.getElementById('auth-title').innerText = agency;
+            document.getElementById('auth-logo-container').innerHTML = `<img src="${DEFAULT_ROLES[agency].logo}" class="w-20 h-20 mx-auto drop-shadow-lg">`;
+            document.getElementById('auth-modal').classList.remove('hidden');
+        };
+
+        window.closeAuth = () => {
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('auth-input').value = '';
+        };
+
+        window.submitAuth = () => {
+            const input = document.getElementById('auth-input').value;
+            if(input === window.db[window.currentAgency].pass) {
+                window.closeAuth();
+                if(window.currentMode === 'staff') {
+                    renderStaffDashboard();
+                    window.showSection('staff-dashboard');
+                } else {
+                    renderAdminDashboard();
+                    window.showSection('admin-dashboard');
+                }
+            } else { alert("KODE AKSES SALAH!"); }
+        };
+
+        // --- Staff ---
+        window.renderStaffDashboard = () => {
+            document.getElementById('staff-agency-name').innerText = window.currentAgency;
+            const staffList = window.db[window.currentAgency].staff || [];
+            const list = document.getElementById('staff-live-list');
+            list.innerHTML = staffList.map((s, idx) => `
+                <div onclick="selectStaff(${idx})" class="p-8 hover:bg-white/5 cursor-pointer flex justify-between items-center transition group">
+                    <div class="flex items-center gap-6">
+                        <span class="status-dot ${s.onDuty ? 'on-duty' : 'off-duty'}"></span>
+                        <div>
+                            <p class="font-black uppercase text-lg group-hover:accent-green transition">${s.name}</p>
+                            <p class="text-[9px] text-gray-500 uppercase font-black tracking-widest">${s.role}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-mono italic text-gray-400">${Math.floor(s.totalMinutes / 60)}h ${s.totalMinutes % 60}m</p>
+                        <p class="text-xs accent-green font-black mt-1">Rp ${s.totalEarnings.toLocaleString()}</p>
+                    </div>
+                </div>
+            `).join('');
+            if(staffList.length === 0) list.innerHTML = `<div class="p-20 text-center text-gray-600 font-bold text-xs tracking-widest uppercase italic">Data Pegawai Kosong</div>`;
+        };
+
+        window.selectStaff = (idx) => {
+            window.selectedStaffIndex = idx;
+            const s = window.db[window.currentAgency].staff[idx];
+            document.getElementById('selected-staff-name').innerText = s.name;
+            document.getElementById('selected-staff-role').innerText = s.role;
+            document.getElementById('staff-action-box').classList.remove('hidden');
+            document.getElementById('staff-pin-input').focus();
+        };
+
+        window.processDuty = (type) => {
+            const pin = document.getElementById('staff-pin-input').value;
+            const staff = window.db[window.currentAgency].staff[window.selectedStaffIndex];
+            if(pin !== staff.pin) return alert("PIN SALAH!");
+
+            if(type === 'in') {
+                if(staff.onDuty) return alert("Sudah On Duty!");
+                staff.onDuty = true;
+                staff.lastLogin = new Date().getTime();
+            } else {
+                if(!staff.onDuty) return alert("Belum mulai kerja!");
+                const diff = Math.floor((new Date().getTime() - staff.lastLogin) / 60000);
+                const finalMinutes = diff > 840 ? 840 : diff; 
+                staff.totalMinutes += finalMinutes;
+                staff.totalEarnings += (finalMinutes * window.db[window.currentAgency].salaries[staff.role]);
+                staff.onDuty = false;
+            }
+            document.getElementById('staff-pin-input').value = '';
+            window.saveCloud();
+        };
+
+        // --- Admin ---
+        window.renderAdminDashboard = () => {
+            document.getElementById('admin-agency-title').innerHTML = `${window.currentAgency} <span class="accent-green">ADMIN</span>`;
+            document.getElementById('agency-pass-input').value = window.db[window.currentAgency].pass;
+            const staffList = window.db[window.currentAgency].staff || [];
+            let totalPayout = 0;
+
+            document.getElementById('admin-table-body').innerHTML = staffList.map((s, idx) => {
+                totalPayout += s.totalEarnings;
+                return `
+                <tr class="hover:bg-white/5 transition border-b border-white/5">
+                    <td class="p-8"><div class="font-black text-white uppercase">${s.name}</div><div class="text-[9px] text-accent uppercase font-black mt-1 tracking-tighter">${s.role}</div></td>
+                    <td class="p-8 font-mono text-gray-500">${s.pin}</td>
+                    <td class="p-8 text-xs italic text-gray-400">${Math.floor(s.totalMinutes / 60)}j ${s.totalMinutes % 60}m</td>
+                    <td class="p-8 accent-green font-black italic text-sm">Rp ${s.totalEarnings.toLocaleString()}</td>
+                    <td class="p-8 text-right">
+                        <button onclick="editStaff(${idx})" class="text-gray-500 hover:text-white mr-6"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteStaff(${idx})" class="text-gray-500 hover:text-red-500"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            document.getElementById('total-agency-payout').innerText = `Rp ${totalPayout.toLocaleString()}`;
+            document.getElementById('admin-salary-table').innerHTML = Object.keys(window.db[window.currentAgency].salaries).map(role => `
+                <div class="flex justify-between items-center p-4 bg-white/5 rounded-2xl">
+                    <span class="text-[10px] font-black uppercase tracking-tighter">${role}</span>
+                    <input type="number" onchange="updateSalary('${role}', this.value)" value="${window.db[window.currentAgency].salaries[role]}" class="w-24 bg-transparent text-right text-accent font-black text-xs">
+                </div>
+            `).join('');
+        };
+
+        window.updateAgencyPass = () => {
+            const newPass = document.getElementById('agency-pass-input').value;
+            if(!newPass) return;
+            window.db[window.currentAgency].pass = newPass;
+            window.saveCloud();
+            alert("Password Diperbarui!");
+        };
+
+        window.openAddStaff = () => {
+            const roleSelect = document.getElementById('new-staff-role');
+            roleSelect.innerHTML = DEFAULT_ROLES[window.currentAgency].roles.map(r => `<option value="${r}">${r}</option>`).join('');
+            document.getElementById('add-staff-modal').classList.remove('hidden');
+        };
+
+        window.closeAddStaff = () => {
+            document.getElementById('add-staff-modal').classList.add('hidden');
+            window.selectedStaffIndex = null;
+            document.getElementById('new-staff-name').value = '';
+            document.getElementById('new-staff-pin').value = '';
+        };
+
+        window.saveStaff = () => {
+            const name = document.getElementById('new-staff-name').value;
+            const role = document.getElementById('new-staff-role').value;
+            const pin = document.getElementById('new-staff-pin').value;
+            if(!name || !pin) return alert("Lengkapi data!");
+
+            if(!window.db[window.currentAgency].staff) window.db[window.currentAgency].staff = [];
+            
+            if(window.selectedStaffIndex !== null) {
+                window.db[window.currentAgency].staff[window.selectedStaffIndex].name = name;
+                window.db[window.currentAgency].staff[window.selectedStaffIndex].role = role;
+                window.db[window.currentAgency].staff[window.selectedStaffIndex].pin = pin;
+            } else {
+                window.db[window.currentAgency].staff.push({ name, role, pin, totalMinutes: 0, totalEarnings: 0, onDuty: false, lastLogin: null });
+            }
+            window.saveCloud();
+            window.closeAddStaff();
+        };
+
+        window.editStaff = (idx) => {
+            window.selectedStaffIndex = idx;
+            const s = window.db[window.currentAgency].staff[idx];
+            window.openAddStaff();
+            document.getElementById('new-staff-name').value = s.name;
+            document.getElementById('new-staff-role').value = s.role;
+            document.getElementById('new-staff-pin').value = s.pin;
+        };
+
+        window.deleteStaff = (idx) => {
+            if(confirm("Hapus pegawai?")) {
+                window.db[window.currentAgency].staff.splice(idx, 1);
+                window.saveCloud();
+            }
+        };
+
+        window.updateSalary = (role, val) => {
+            window.db[window.currentAgency].salaries[role] = parseInt(val);
+            window.saveCloud();
+        };
+
+        window.resetAllDuty = () => {
+            if(confirm("RESET DATABASE?")) {
+                window.db[window.currentAgency].staff.forEach(s => {
+                    s.totalMinutes = 0; s.totalEarnings = 0; s.onDuty = false;
+                });
+                window.saveCloud();
+            }
+        };
+
+        window.exportToWord = () => {
+            let total = 0;
+            let content = `LAPORAN PENGELUARAN GAJI: ${window.currentAgency.toUpperCase()}\n`;
+            content += `Dibuat pada: ${new Date().toLocaleString()}\n================================================\n\n`;
+            (window.db[window.currentAgency].staff || []).forEach(s => {
+                total += s.totalEarnings;
+                content += `NAMA: ${s.name}\nJABATAN: ${s.role}\nDURASI: ${Math.floor(s.totalMinutes/60)}j ${s.totalMinutes%60}m\nSUBTOTAL: Rp ${s.totalEarnings.toLocaleString()}\n------------------------------------------------\n`;
+            });
+            content += `\nTOTAL PENGELUARAN: Rp ${total.toLocaleString()}`;
+            const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Slip_Gaji_${window.currentAgency}.doc`;
+            link.click();
+        };
+    </script>
+</body>
+</html>
