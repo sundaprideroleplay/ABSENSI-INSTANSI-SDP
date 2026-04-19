@@ -30,7 +30,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: linear-gradient(rgba(2, 12, 12, 0.85), rgba(2, 12, 12, 0.95)), url('bg.png');
+            background-image: linear-gradient(rgba(2, 12, 12, 0.85), rgba(2, 12, 12, 0.95)), url('bg.jpg');
             background-size: cover;
             background-position: center;
             z-index: -1;
@@ -77,7 +77,6 @@
         .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--primary-emerald); transition: 0.3s; }
         .nav-link:hover::after { width: 100%; }
         
-        /* Loading Overlay */
         #loading-screen {
             position: fixed;
             inset: 0;
@@ -121,8 +120,8 @@
                     DISIPLIN DAN<br><span class="accent-green underline decoration-white/10">INTEGRITAS.</span>
                 </h1>
                 <p class="text-gray-400 mb-10 max-w-md leading-relaxed">Sistem manajemen terpadu untuk efisiensi operasional instansi pemerintah, medis, dan pelayanan publik KOTA SundaPride.</p>
-                
-                <div class="flex gap-10 mb-12">
+
+                  <div class="flex gap-10 mb-12">
                     <div class="text-center group">
                         <div class="p-4 glass rounded-2xl mb-3 group-hover:scale-110 transition cursor-help">
                             <img src="logopemerintah.png" class="w-12 h-12 object-contain">
@@ -145,24 +144,22 @@
 
                 <button onclick="startPortal('staff')" class="bg-accent px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl shadow-emerald-500/20 hover:shadow-emerald-500/40 transition transform hover:-translate-y-1">Mulai Bertugas Sekarang</button>
             </div>
+    
 
             <div class="glass p-12 rounded-[50px] border-t-4 border-t-accent relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-8 opacity-5">
-                    <i class="fas fa-shield-alt text-9xl"></i>
-                </div>
                 <h3 class="text-2xl font-black mb-8 accent-green italic tracking-tighter">PROTOKOL OPERASIONAL</h3>
                 <div class="space-y-6 text-sm">
                     <div class="flex gap-6 group">
-                        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center font-bold text-accent border border-accent/20 group-hover:bg-accent group-hover:text-black transition">01</div>
-                        <p class="text-gray-300 self-center font-medium">Lakukan <b class="text-white">Clock-In</b> saat mulai bertugas di area kerja.</p>
+                        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center font-bold text-accent border border-accent/20">01</div>
+                        <p class="text-gray-300 self-center font-medium">Lakukan <b class="text-white">Clock-In</b> saat mulai bertugas.</p>
                     </div>
                     <div class="flex gap-6 group">
-                        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center font-bold text-accent border border-accent/20 group-hover:bg-accent group-hover:text-black transition">02</div>
+                        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center font-bold text-accent border border-accent/20">02</div>
                         <p class="text-gray-300 self-center font-medium">Maksimal durasi satu sesi tugas adalah <b class="text-white">14 Jam</b>.</p>
                     </div>
                     <div class="flex gap-6 group">
-                        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center font-bold text-accent border border-accent/20 group-hover:bg-accent group-hover:text-black transition">03</div>
-                        <p class="text-gray-300 self-center font-medium">Data gaji dikalkulasi secara <b class="text-white">Real-time</b> per menit tugas.</p>
+                        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center font-bold text-accent border border-accent/20">03</div>
+                        <p class="text-gray-300 self-center font-medium">Gaji dikalkulasi otomatis per menit tugas.</p>
                     </div>
                 </div>
             </div>
@@ -177,17 +174,14 @@
             <div onclick="openAuth('Pemerintah')" class="glass logo-card p-12 rounded-[45px] cursor-pointer">
                 <img src="logopemerintah.png" class="w-24 h-24 mx-auto mb-8 drop-shadow-2xl">
                 <h4 class="font-black text-lg uppercase tracking-widest">Pemerintah</h4>
-                <div class="mt-4 text-[10px] opacity-40 font-bold uppercase">SundaPride Gov</div>
             </div>
             <div onclick="openAuth('Rumah Sakit')" class="glass logo-card p-12 rounded-[45px] cursor-pointer">
                 <img src="logors.png" class="w-24 h-24 mx-auto mb-8 drop-shadow-2xl">
                 <h4 class="font-black text-lg uppercase tracking-widest">Rumah Sakit</h4>
-                <div class="mt-4 text-[10px] opacity-40 font-bold uppercase">SundaPride Medical</div>
             </div>
             <div onclick="openAuth('Rumah Makan')" class="glass logo-card p-12 rounded-[45px] cursor-pointer">
                 <img src="logorm2.png" class="w-24 h-24 mx-auto mb-8 drop-shadow-2xl">
                 <h4 class="font-black text-lg uppercase tracking-widest">Rumah Makan</h4>
-                <div class="mt-4 text-[10px] opacity-40 font-bold uppercase">SundaPride Resto</div>
             </div>
         </div>
     </section>
@@ -195,35 +189,23 @@
     <section id="staff-dashboard" class="section-view pt-36 px-6">
         <div class="max-w-6xl mx-auto">
             <div class="flex justify-between items-center mb-10">
-                <div>
-                    <h2 class="text-4xl font-black italic uppercase leading-none"><span id="staff-agency-name" class="accent-green">---</span></h2>
-                    <p class="text-[10px] font-bold opacity-30 tracking-[0.5em] mt-2 italic">STAFF OPERATIONAL PORTAL</p>
-                </div>
-                <button onclick="showSection('agency-select')" class="bg-white/5 hover:bg-white/10 px-6 py-3 rounded-xl text-[10px] font-black border border-white/5 transition uppercase italic">Ganti Unit</button>
+                <h2 class="text-4xl font-black italic uppercase leading-none"><span id="staff-agency-name" class="accent-green">---</span></h2>
+                <button onclick="showSection('agency-select')" class="bg-white/5 hover:bg-white/10 px-6 py-3 rounded-xl text-[10px] font-black border border-white/5 uppercase italic">Ganti Unit</button>
             </div>
-            
             <div class="grid lg:grid-cols-3 gap-10">
                 <div class="lg:col-span-2 glass rounded-[40px] overflow-hidden">
-                    <div class="p-6 bg-white/5 flex justify-between items-center border-b border-white/5">
-                        <span class="text-[10px] font-black tracking-widest opacity-50 uppercase italic">Pegawai Terdaftar</span>
-                        <div class="flex gap-2">
-                            <span class="status-dot on-duty"></span> <span class="text-[9px] font-bold opacity-50 mr-3">ON DUTY</span>
-                            <span class="status-dot off-duty"></span> <span class="text-[9px] font-bold opacity-50">OFF DUTY</span>
-                        </div>
-                    </div>
                     <div id="staff-live-list" class="divide-y divide-white/5 max-h-[500px] overflow-y-auto"></div>
                 </div>
-
                 <div id="staff-action-box" class="glass p-10 rounded-[40px] hidden border-t-8 border-t-accent shadow-2xl">
                     <div class="text-center mb-8">
                         <i class="fas fa-fingerprint text-4xl accent-green mb-4"></i>
                         <h4 id="selected-staff-name" class="text-2xl font-black uppercase tracking-tighter">NAMA STAFF</h4>
                         <p id="selected-staff-role" class="text-[10px] text-accent font-bold uppercase tracking-widest mt-2">JABATAN</p>
                     </div>
-                    <input type="password" id="staff-pin-input" placeholder="PERSONAL PIN" class="w-full p-5 rounded-2xl text-center text-3xl tracking-[0.5em] mb-8 font-black">
+                    <input type="password" id="staff-pin-input" placeholder="PIN" class="w-full p-5 rounded-2xl text-center text-3xl tracking-[0.5em] mb-8 font-black">
                     <div class="flex flex-col gap-4">
-                        <button onclick="processDuty('in')" class="w-full bg-accent py-5 rounded-2xl font-black text-xs uppercase shadow-lg shadow-emerald-500/20">CLOCK IN (MASUK)</button>
-                        <button onclick="processDuty('out')" class="w-full bg-red-500/10 text-red-500 py-5 rounded-2xl font-black text-xs uppercase border border-red-500/20 hover:bg-red-500 hover:text-white transition">CLOCK OUT (SELESAI)</button>
+                        <button onclick="processDuty('in')" class="w-full bg-accent py-5 rounded-2xl font-black text-xs uppercase shadow-lg shadow-emerald-500/20">CLOCK IN</button>
+                        <button onclick="processDuty('out')" class="w-full bg-red-500/10 text-red-500 py-5 rounded-2xl font-black text-xs uppercase border border-red-500/20 hover:bg-red-500 hover:text-white transition">CLOCK OUT</button>
                     </div>
                 </div>
             </div>
@@ -234,46 +216,35 @@
         <div class="max-w-7xl mx-auto">
             <div class="flex justify-between items-end mb-12">
                 <div>
-                    <h2 id="admin-agency-title" class="text-5xl font-black italic uppercase tracking-tighter leading-none italic">ADMIN <span class="accent-green">PANEL</span></h2>
-                    <p class="text-[10px] font-bold tracking-[0.5em] text-gray-500 mt-4">PENGELUARAN TOTAL: <span id="total-agency-payout" class="text-white">Rp 0</span></p>
+                    <h2 id="admin-agency-title" class="text-5xl font-black italic uppercase tracking-tighter leading-none">ADMIN <span class="accent-green">PANEL</span></h2>
+                    <p class="text-[10px] font-bold tracking-[0.5em] text-gray-500 mt-4 uppercase">Total Payout: <span id="total-agency-payout" class="text-white">Rp 0</span></p>
                 </div>
                 <div class="flex gap-4">
-                    <button onclick="exportToWord()" class="bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase border border-blue-500/20 transition"><i class="fas fa-file-invoice mr-2"></i>Cetak Laporan</button>
+                    <button onclick="exportToWord()" class="bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase border border-blue-500/20 transition">Cetak Laporan</button>
                     <button onclick="resetAllDuty()" class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase border border-red-500/20 transition">Reset Database</button>
                 </div>
             </div>
-
             <div class="grid lg:grid-cols-4 gap-8">
                 <div class="lg:col-span-3 glass rounded-[40px] overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left">
-                            <thead class="text-[10px] text-gray-500 uppercase font-black bg-white/5 tracking-widest italic">
-                                <tr>
-                                    <th class="p-8">Profil Pegawai</th>
-                                    <th class="p-8">PIN</th>
-                                    <th class="p-8">Akumulasi Waktu</th>
-                                    <th class="p-8">Total Gaji</th>
-                                    <th class="p-8 text-right">Opsi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-table-body" class="text-sm divide-y divide-white/5"></tbody>
-                        </table>
-                    </div>
-                    <button onclick="openAddStaff()" class="w-full p-8 text-xs font-black uppercase opacity-40 hover:opacity-100 hover:bg-accent hover:text-black transition tracking-[8px] bg-white/5">+ DAFTARKAN PEGAWAI BARU</button>
+                    <table class="w-full text-left">
+                        <thead class="text-[10px] text-gray-500 uppercase font-black bg-white/5 tracking-widest">
+                            <tr><th class="p-8">Profil</th><th class="p-8">PIN</th><th class="p-8">Waktu</th><th class="p-8">Gaji</th><th class="p-8 text-right">Opsi</th></tr>
+                        </thead>
+                        <tbody id="admin-table-body" class="text-sm divide-y divide-white/5"></tbody>
+                    </table>
+                    <button onclick="openAddStaff()" class="w-full p-8 text-xs font-black uppercase opacity-40 hover:opacity-100 hover:bg-accent hover:text-black transition tracking-[8px] bg-white/5">+ DAFTARKAN PEGAWAI</button>
                 </div>
-
                 <div class="space-y-8">
                     <div class="glass p-8 rounded-[40px]">
-                        <h4 class="text-xs font-black uppercase tracking-widest mb-8 opacity-50 flex items-center italic"><i class="fas fa-coins mr-3 text-accent"></i>Rate Gaji / Menit</h4>
+                        <h4 class="text-xs font-black uppercase tracking-widest mb-8 opacity-50 italic">Rate Gaji / Menit</h4>
                         <div id="admin-salary-table" class="space-y-4"></div>
                     </div>
-
                     <div class="glass p-8 rounded-[40px] border-l-4 border-l-red-500">
-                        <h4 class="text-xs font-black uppercase tracking-widest mb-6 opacity-50 italic"><i class="fas fa-key mr-3 text-red-500"></i>Keamanan Instansi</h4>
+                        <h4 class="text-xs font-black uppercase tracking-widest mb-6 opacity-50 italic">Keamanan Instansi</h4>
                         <label class="text-[9px] font-bold opacity-30 mb-2 block">PASSWORD AKSES STAFF</label>
                         <div class="flex gap-2">
                             <input type="text" id="agency-pass-input" class="w-full p-3 rounded-xl text-sm font-black">
-                            <button onclick="updateAgencyPass()" class="bg-accent px-4 rounded-xl text-black text-xs font-black transition active:scale-95"><i class="fas fa-save"></i></button>
+                            <button onclick="updateAgencyPass()" class="bg-accent px-4 rounded-xl text-black text-xs font-black transition"><i class="fas fa-save"></i></button>
                         </div>
                     </div>
                 </div>
@@ -285,7 +256,7 @@
         <div class="glass max-w-sm w-full p-12 rounded-[50px] text-center border-t-8 border-t-accent">
             <div id="auth-logo-container" class="mb-6"></div>
             <h3 id="auth-title" class="text-3xl font-black uppercase italic mb-2 tracking-tighter">LOGIN</h3>
-            <p class="text-[10px] font-bold opacity-30 tracking-[0.4em] mb-10">INSTANSI TERVERIFIKASI</p>
+            <p id="auth-subtitle" class="text-[10px] font-bold opacity-30 tracking-[0.4em] mb-10">MASUKKAN KODE AKSES</p>
             <input type="password" id="auth-input" placeholder="ACCESS CODE" class="w-full p-5 rounded-2xl text-center text-2xl tracking-[0.5em] mb-8 font-black">
             <div class="flex gap-4">
                 <button onclick="closeAuth()" class="flex-1 bg-white/5 py-5 rounded-2xl font-black text-[10px] uppercase border border-white/5">BATAL</button>
@@ -296,23 +267,14 @@
 
     <div id="add-staff-modal" class="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center hidden p-6 backdrop-blur-2xl">
         <div class="glass max-w-md w-full p-12 rounded-[50px] border-t-8 border-t-accent">
-            <h3 class="text-3xl font-black uppercase italic mb-10 tracking-tighter">DATA <span class="accent-green">PEGAWAI</span></h3>
+            <h3 class="text-3xl font-black uppercase italic mb-10 tracking-tighter">DATA PEGAWAI</h3>
             <div class="space-y-5">
-                <div>
-                    <label class="text-[10px] font-black opacity-30 ml-2 mb-2 block uppercase">Nama Lengkap</label>
-                    <input type="text" id="new-staff-name" class="w-full p-4 rounded-2xl font-bold">
-                </div>
-                <div>
-                    <label class="text-[10px] font-black opacity-30 ml-2 mb-2 block uppercase">Jabatan Instansi</label>
-                    <select id="new-staff-role" class="w-full p-4 rounded-2xl font-bold"></select>
-                </div>
-                <div>
-                    <label class="text-[10px] font-black opacity-30 ml-2 mb-2 block uppercase">PIN</label>
-                    <input type="text" id="new-staff-pin" maxlength="4" class="w-full p-4 rounded-2xl font-black text-center text-xl tracking-widest">
-                </div>
+                <input type="text" id="new-staff-name" placeholder="Nama Lengkap" class="w-full p-4 rounded-2xl font-bold">
+                <select id="new-staff-role" class="w-full p-4 rounded-2xl font-bold"></select>
+                <input type="text" id="new-staff-pin" placeholder="PIN (4 Digit)" maxlength="4" class="w-full p-4 rounded-2xl font-black text-center text-xl">
                 <div class="flex gap-4 pt-6">
-                    <button onclick="closeAddStaff()" class="flex-1 bg-white/5 py-5 rounded-2xl font-black text-[10px] uppercase border border-white/5">BATAL</button>
-                    <button onclick="saveStaff()" class="flex-1 bg-accent py-5 rounded-2xl font-black text-[10px] uppercase italic">SIMPAN DATA</button>
+                    <button onclick="closeAddStaff()" class="flex-1 bg-white/5 py-5 rounded-2xl font-black text-[10px] uppercase">BATAL</button>
+                    <button onclick="saveStaff()" class="flex-1 bg-accent py-5 rounded-2xl font-black text-[10px] uppercase italic">SIMPAN</button>
                 </div>
             </div>
         </div>
@@ -320,7 +282,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDS0COE1X5vh8QCeIeaA-rmmGf8uKrP0M8",
@@ -335,7 +297,9 @@
         const app = initializeApp(firebaseConfig);
         const db_firebase = getDatabase(app);
 
-        // Global State
+        // --- AUTH CONFIGURATION ---
+        const MASTER_ADMIN_PASS = "@dmin321"; // Ganti ini dengan password admin khusus Anda
+
         window.currentMode = 'staff';
         window.currentAgency = '';
         window.selectedStaffIndex = null;
@@ -347,28 +311,21 @@
             "Rumah Sakit": { logo: 'logors.png', roles: ["DIREKTUR UTAMA", "WAKIL DIREKTUR", "CHIEF DOKTER", "DOKTER AHLI", "DOKTER", "PARAMEDIC", "MAGANG"], salary: 4000, pass: 'RS123' }
         };
 
-        // Sinkronisasi Real-time
         const dbRef = ref(db_firebase, 'nexus_v2');
         onValue(dbRef, (snapshot) => {
             const data = snapshot.val();
-            if (data) {
-                window.db = data;
-            } else {
-                // Inisialisasi awal jika cloud kosong
+            if (data) { window.db = data; } 
+            else {
                 window.db = {
                     Pemerintah: { staff: [], salaries: {}, pass: 'GOV123' },
                     "Rumah Sakit": { staff: [], salaries: {}, pass: 'RS123' },
                     "Rumah Makan": { staff: [], salaries: {}, pass: 'RM123' }
                 };
                 Object.keys(DEFAULT_ROLES).forEach(ag => {
-                    DEFAULT_ROLES[ag].roles.forEach(role => {
-                        window.db[ag].salaries[role] = DEFAULT_ROLES[ag].salary;
-                    });
+                    DEFAULT_ROLES[ag].roles.forEach(role => { window.db[ag].salaries[role] = DEFAULT_ROLES[ag].salary; });
                 });
                 set(dbRef, window.db);
             }
-            
-            // Re-render jika sedang di dashboard tertentu
             if(window.currentAgency) {
                 if(window.currentMode === 'staff' && document.getElementById('staff-dashboard').classList.contains('active')) renderStaffDashboard();
                 if(window.currentMode === 'admin' && document.getElementById('admin-dashboard').classList.contains('active')) renderAdminDashboard();
@@ -376,7 +333,6 @@
             document.getElementById('loading-screen').style.display = 'none';
         });
 
-        // --- Core Functions attached to window for HTML access ---
         window.saveCloud = () => set(ref(db_firebase, 'nexus_v2'), window.db);
 
         window.showSection = (id) => {
@@ -395,6 +351,7 @@
         window.openAuth = (agency) => {
             window.currentAgency = agency;
             document.getElementById('auth-title').innerText = agency;
+            document.getElementById('auth-subtitle').innerText = window.currentMode === 'admin' ? "ADMIN SECURITY CODE" : "STAFF ACCESS CODE";
             document.getElementById('auth-logo-container').innerHTML = `<img src="${DEFAULT_ROLES[agency].logo}" class="w-20 h-20 mx-auto drop-shadow-lg">`;
             document.getElementById('auth-modal').classList.remove('hidden');
         };
@@ -404,21 +361,28 @@
             document.getElementById('auth-input').value = '';
         };
 
+        // --- PERBAIKAN LOGIKA PASSWORD ---
         window.submitAuth = () => {
             const input = document.getElementById('auth-input').value;
-            if(input === window.db[window.currentAgency].pass) {
-                window.closeAuth();
-                if(window.currentMode === 'staff') {
-                    renderStaffDashboard();
-                    window.showSection('staff-dashboard');
-                } else {
+            
+            if(window.currentMode === 'admin') {
+                // Login Admin: Hanya bisa dengan password khusus (MASTER_ADMIN_PASS)
+                if(input === MASTER_ADMIN_PASS) {
+                    window.closeAuth();
                     renderAdminDashboard();
                     window.showSection('admin-dashboard');
-                }
-            } else { alert("KODE AKSES SALAH!"); }
+                } else { alert("PASSWORD ADMIN SALAH!"); }
+            } else {
+                // Login Staff: Menggunakan password instansi yang bisa diatur di panel admin
+                const agencyPass = window.db[window.currentAgency].pass;
+                if(input === agencyPass) {
+                    window.closeAuth();
+                    renderStaffDashboard();
+                    window.showSection('staff-dashboard');
+                } else { alert("KODE AKSES INSTANSI SALAH!"); }
+            }
         };
 
-        // --- Staff ---
         window.renderStaffDashboard = () => {
             document.getElementById('staff-agency-name').innerText = window.currentAgency;
             const staffList = window.db[window.currentAgency].staff || [];
@@ -438,7 +402,7 @@
                     </div>
                 </div>
             `).join('');
-            if(staffList.length === 0) list.innerHTML = `<div class="p-20 text-center text-gray-600 font-bold text-xs tracking-widest uppercase italic">Data Pegawai Kosong</div>`;
+            if(staffList.length === 0) list.innerHTML = `<div class="p-20 text-center opacity-30 font-black uppercase italic">Belum Ada Staff</div>`;
         };
 
         window.selectStaff = (idx) => {
@@ -471,7 +435,6 @@
             window.saveCloud();
         };
 
-        // --- Admin ---
         window.renderAdminDashboard = () => {
             document.getElementById('admin-agency-title').innerHTML = `${window.currentAgency} <span class="accent-green">ADMIN</span>`;
             document.getElementById('agency-pass-input').value = window.db[window.currentAgency].pass;
@@ -507,7 +470,7 @@
             if(!newPass) return;
             window.db[window.currentAgency].pass = newPass;
             window.saveCloud();
-            alert("Password Diperbarui!");
+            alert("Password Akses Staff Berhasil Diubah!");
         };
 
         window.openAddStaff = () => {
@@ -564,7 +527,7 @@
         };
 
         window.resetAllDuty = () => {
-            if(confirm("RESET DATABASE?")) {
+            if(confirm("RESET SEMUA DATA ABSENSI?")) {
                 window.db[window.currentAgency].staff.forEach(s => {
                     s.totalMinutes = 0; s.totalEarnings = 0; s.onDuty = false;
                 });
@@ -585,7 +548,7 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `Slip_Gaji_${window.currentAgency}.doc`;
+            link.download = `Laporan_Gaji_${window.currentAgency}.doc`;
             link.click();
         };
     </script>
